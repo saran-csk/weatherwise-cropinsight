@@ -25,7 +25,7 @@ const createPrompt = (weather: WeatherData): string => {
   const { temperature, humidity, wind_speed, description, clouds, rain } = weather;
   
   return `
-You are an agricultural consulting expert specializing in Tamil Nadu agriculture. Based on the following weather data, provide professional and detailed recommendations for crop management and market insights tailored for business professionals and agricultural enterprises in Tamil Nadu. Format your response in a structured, clear manner without using asterisks or bold formatting.
+You are an agricultural expert AI assistant. Based on the following weather data, provide concise recommendations for crop management and market insights. Format your response in a structured, clear manner that's easy to parse. Do NOT use asterisks or bold formatting in your response.
 
 Weather data for ${weather.city}, ${weather.country}:
 - Temperature: ${temperature}°C
@@ -35,16 +35,15 @@ Weather data for ${weather.city}, ${weather.country}:
 - Cloud Cover: ${clouds}%
 ${rain ? `- Rainfall: ${rain['1h'] || rain['3h'] || 0} mm` : '- No rainfall data available'}
 
-Please provide the following information specific to Tamil Nadu agriculture:
+Please provide the following information:
+1. Crops that would thrive in these conditions (list at least 5-7 specific crops)
+2. Crops to avoid in these conditions (list at least 3-5 specific crops)
+3. Detailed crop management advice for these weather conditions (2-3 detailed paragraphs)
+4. Agricultural market outlook based on these weather conditions (1-2 detailed paragraphs)
+5. Specific market recommendations (list at least 3-5 specific recommendations)
+6. Potential risks to monitor (list at least 3-5 specific risks)
 
-1. High-value crops suited for these conditions in Tamil Nadu (list 5-7 specific crops with very brief justification)
-2. Crops to avoid in these conditions in Tamil Nadu's climate (list 3-5 specific crops with brief reasoning)
-3. Professional crop management recommendations (2-3 detailed paragraphs providing actionable management advice for Tamil Nadu farmers)
-4. Agricultural market analysis for Tamil Nadu (1-2 detailed paragraphs analyzing current and projected market conditions)
-5. Strategic market recommendations for agribusiness professionals (list at least 4-5 specific, actionable business recommendations)
-6. Key risk factors and mitigation strategies (list 4-5 specific risks with brief mitigation suggestions)
-
-Format your response with clear professional headings. Your response should be suitable for presentation to agricultural business stakeholders and investors in Tamil Nadu.
+Format your response with clear headings and avoid using asterisks or markdown formatting.
 `;
 };
 
@@ -100,23 +99,23 @@ export const fetchInsights = async (
 };
 
 const parseAIResponse = (text: string): InsightData => {
-  // Default structure with empty values
+  // Improved parser for better extraction
   const defaultInsights: InsightData = {
     crops: {
       recommended: [],
       avoid: [],
-      management: "No specific management advice available for Tamil Nadu.",
+      management: "No specific management advice available.",
     },
     market: {
-      outlook: "No Tamil Nadu market outlook available.",
+      outlook: "No market outlook available.",
       recommendations: [],
       risks: []
     }
   };
   
   try {
-    // Extract recommended crops with more robust pattern matching
-    const recommendedMatch = text.match(/High-value crops|Recommended Crops|Crops suited for these conditions[^:]*:(.*?)(?=\d\.|Crops to avoid|$)/si);
+    // Extract crops that would thrive - more robust pattern matching
+    const recommendedMatch = text.match(/Crops that would thrive|Recommended Crops[^:]*:(.*?)(?=\d\.|Crops to avoid|$)/si);
     if (recommendedMatch && recommendedMatch[1]) {
       defaultInsights.crops.recommended = recommendedMatch[1]
         .split(/,|\n|-|•/)
@@ -125,7 +124,7 @@ const parseAIResponse = (text: string): InsightData => {
     }
     
     // Extract crops to avoid
-    const avoidMatch = text.match(/Crops to avoid[^:]*:(.*?)(?=\d\.|Crop management|Professional crop management|$)/si);
+    const avoidMatch = text.match(/Crops to avoid[^:]*:(.*?)(?=\d\.|Crop management|$)/si);
     if (avoidMatch && avoidMatch[1]) {
       defaultInsights.crops.avoid = avoidMatch[1]
         .split(/,|\n|-|•/)
@@ -133,20 +132,20 @@ const parseAIResponse = (text: string): InsightData => {
         .filter(item => item.length > 0 && !item.match(/^\d+\.?$/));
     }
     
-    // Extract crop management advice
-    const managementMatch = text.match(/[Cc]rop [Mm]anagement [Rr]ecommendations?|Professional [Cc]rop [Mm]anagement[^:]*:(.*?)(?=\d\.|[Aa]gricultural [Mm]arket|[Mm]arket [Aa]nalysis|$)/si);
+    // Extract crop management advice - capture more text
+    const managementMatch = text.match(/[Cc]rop [Mm]anagement[^:]*:(.*?)(?=\d\.|[Mm]arket [Oo]utlook|[Aa]gricultural [Mm]arket|$)/si);
     if (managementMatch && managementMatch[1]) {
       defaultInsights.crops.management = managementMatch[1].trim();
     }
     
-    // Extract market outlook/analysis
-    const outlookMatch = text.match(/[Aa]gricultural [Mm]arket [Aa]nalysis|[Mm]arket [Oo]utlook|[Mm]arket [Aa]nalysis[^:]*:(.*?)(?=\d\.|[Ss]trategic [Mm]arket|[Mm]arket [Rr]ecommendations|$)/si);
+    // Extract market outlook - more comprehensive
+    const outlookMatch = text.match(/[Mm]arket [Oo]utlook|[Aa]gricultural [Mm]arket [Oo]utlook[^:]*:(.*?)(?=\d\.|[Mm]arket [Rr]ecommendations|[Ss]pecific [Mm]arket|$)/si);
     if (outlookMatch && outlookMatch[1]) {
       defaultInsights.market.outlook = outlookMatch[1].trim();
     }
     
     // Extract market recommendations
-    const recommendationsMatch = text.match(/[Ss]trategic [Mm]arket [Rr]ecommendations|[Mm]arket [Rr]ecommendations[^:]*:(.*?)(?=\d\.|[Kk]ey [Rr]isk [Ff]actors|[Rr]isks? [Tt]o [Mm]onitor|[Pp]otential [Rr]isks|$)/si);
+    const recommendationsMatch = text.match(/[Mm]arket [Rr]ecommendations|[Ss]pecific [Mm]arket [Rr]ecommendations[^:]*:(.*?)(?=\d\.|[Pp]otential [Rr]isks|[Rr]isks to [Mm]onitor|$)/si);
     if (recommendationsMatch && recommendationsMatch[1]) {
       defaultInsights.market.recommendations = recommendationsMatch[1]
         .split(/,|\n|-|•/)
@@ -154,8 +153,8 @@ const parseAIResponse = (text: string): InsightData => {
         .filter(item => item.length > 0 && !item.match(/^\d+\.?$/));
     }
     
-    // Extract risks and mitigation strategies
-    const risksMatch = text.match(/[Kk]ey [Rr]isk [Ff]actors|[Rr]isks? [Tt]o [Mm]onitor|[Pp]otential [Rr]isks[^:]*:(.*?)(?=\d\.|$)/si);
+    // Extract potential risks
+    const risksMatch = text.match(/[Pp]otential [Rr]isks|[Rr]isks to [Mm]onitor[^:]*:(.*?)(?=\d\.|$)/si);
     if (risksMatch && risksMatch[1]) {
       defaultInsights.market.risks = risksMatch[1]
         .split(/,|\n|-|•/)
