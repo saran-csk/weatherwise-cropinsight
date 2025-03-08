@@ -5,6 +5,7 @@ import WeatherSearch from '@/components/WeatherSearch';
 import WeatherDisplay from '@/components/WeatherDisplay';
 import CropInsights from '@/components/CropInsights';
 import MarketInsights from '@/components/MarketInsights';
+import ChatAssistant from '@/components/ChatAssistant';
 import AnimatedTransition from '@/components/AnimatedTransition';
 import { 
   fetchWeatherData, 
@@ -180,6 +181,12 @@ const Index = () => {
           </div>
         )}
       </main>
+      
+      {/* Add ChatAssistant component */}
+      <ChatAssistant 
+        weatherData={weatherData} 
+        insightData={insightData} 
+      />
       
       <footer className="mt-auto pt-6 pb-4 text-center text-text-light text-sm">
         <AnimatedTransition show={true} animation="fade">
