@@ -1,7 +1,8 @@
+
 import React, { useEffect } from 'react';
 import { WeatherData } from '@/services/weatherService';
 import { getWeatherIconUrl } from '@/services/weatherService';
-import { Cloud, Droplets, Wind, Sunrise, Sunset, Eye, AlertTriangle } from 'lucide-react';
+import { Cloud, Droplets, Wind, Sunrise, Sunset, Eye, AlertTriangle, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
@@ -137,6 +138,36 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weather, isVisible }) =
               />
             </div>
           </div>
+          
+          {weather.additionalCities && weather.additionalCities.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold mb-4">Other Cities in Tamil Nadu</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {weather.additionalCities.map((city, index) => (
+                  <Glass key={index} className="p-4 hover:shadow-md transition-all duration-300">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <MapPin size={18} className="text-weather-dark-blue mr-2" />
+                        <h3 className="font-medium">{city.name}</h3>
+                      </div>
+                      <div className="flex items-center">
+                        <img 
+                          src={getWeatherIconUrl(city.icon)} 
+                          alt={city.description}
+                          className="w-10 h-10"
+                          loading="lazy"
+                        />
+                        <span className="text-xl font-light ml-1">
+                          {Math.round(city.temperature)}°
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-text-light mt-1 capitalize">{city.description}</p>
+                  </Glass>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </Glass>
     </AnimatedTransition>
