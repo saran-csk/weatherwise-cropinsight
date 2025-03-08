@@ -1,10 +1,13 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -13,7 +16,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 210 100% 50%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -32,22 +35,15 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -96,6 +92,74 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-soft-white text-text-dark antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+/* Custom styles */
+.glass-panel {
+  @apply bg-white bg-opacity-70 backdrop-blur-md rounded-2xl shadow-glass border border-white border-opacity-30;
+}
+
+.glass-panel-dark {
+  @apply bg-slate-900 bg-opacity-70 backdrop-blur-md rounded-2xl shadow-glass border border-slate-800 border-opacity-30;
+}
+
+.input-clean {
+  @apply bg-transparent border-none outline-none focus:ring-0 focus:border-none;
+}
+
+.stagger-animate > * {
+  animation-fill-mode: both;
+  opacity: 0;
+}
+
+.stagger-animate > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.stagger-animate > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.stagger-animate > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.stagger-animate > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.stagger-animate > *:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.fade-mask {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+/* Force smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom loader animation */
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive image handling */
+img {
+  @apply max-w-full h-auto object-cover;
 }
