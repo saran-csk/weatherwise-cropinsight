@@ -1,6 +1,7 @@
 
 export interface WeatherData {
   city: string;
+  actualCity?: string; // New field to store the actual city name when using fallback
   country: string;
   temperature: number;
   feels_like: number;

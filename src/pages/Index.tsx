@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import WeatherSearch from '@/components/WeatherSearch';
@@ -29,7 +28,6 @@ const Index = () => {
   const [isInsightsVisible, setIsInsightsVisible] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  // Check if we're on first load and trigger a notification
   useEffect(() => {
     if (isFirstLoad) {
       setTimeout(() => {
@@ -39,7 +37,6 @@ const Index = () => {
     }
   }, [isFirstLoad]);
 
-  // Function to handle city search
   const handleCitySearch = async (city: string) => {
     setIsLoading(true);
     setIsWeatherVisible(false);
@@ -49,17 +46,20 @@ const Index = () => {
       const data = await fetchWeatherData(city);
       
       if ('message' in data) {
-        // Handle error
         toast.error(`Error: ${data.message}`);
         setIsLoading(false);
         return;
       }
       
-      // Set weather data and show it
       setWeatherData(data);
       setIsWeatherVisible(true);
       
-      // Fetch insights with a slight delay to ensure weather data is visible first
+      if (data.actualCity && data.city !== data.actualCity) {
+        toast.info(`Showing weather for ${data.actualCity} (in Tamil Nadu) as "${data.city}" was not found`, {
+          duration: 6000
+        });
+      }
+      
       setTimeout(() => fetchAndSetInsights(data), 800);
     } catch (error) {
       console.error("Error in search flow:", error);
@@ -68,7 +68,6 @@ const Index = () => {
     }
   };
 
-  // Function to handle location-based search
   const handleLocationSearch = async () => {
     setIsLoading(true);
     setIsWeatherVisible(false);
@@ -81,17 +80,14 @@ const Index = () => {
       const data = await fetchWeatherByCoords(latitude, longitude);
       
       if ('message' in data) {
-        // Handle error
         toast.error(`Error: ${data.message}`);
         setIsLoading(false);
         return;
       }
       
-      // Set weather data and show it
       setWeatherData(data);
       setIsWeatherVisible(true);
       
-      // Fetch insights with a slight delay
       setTimeout(() => fetchAndSetInsights(data), 800);
     } catch (error) {
       console.error("Error in location flow:", error);
@@ -99,14 +95,12 @@ const Index = () => {
       setIsLoading(false);
     }
   };
-  
-  // Function to fetch and set insights
+
   const fetchAndSetInsights = async (weather: WeatherData) => {
     try {
       const insights = await fetchInsights(weather);
       
       if ('message' in insights) {
-        // Handle error but don't show toast since weather data is still useful
         console.error(`Insights error: ${insights.message}`);
         setIsLoading(false);
         return;
@@ -182,7 +176,6 @@ const Index = () => {
         )}
       </main>
       
-      {/* Add ChatAssistant component */}
       <ChatAssistant 
         weatherData={weatherData} 
         insightData={insightData} 

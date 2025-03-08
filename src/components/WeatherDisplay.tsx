@@ -1,8 +1,8 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { WeatherData } from '@/services/weatherService';
 import { getWeatherIconUrl } from '@/services/weatherService';
-import { Cloud, Droplets, Wind, Sunrise, Sunset, Eye } from 'lucide-react';
+import { Cloud, Droplets, Wind, Sunrise, Sunset, Eye, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
 
@@ -13,6 +13,15 @@ interface WeatherDisplayProps {
 
 const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weather, isVisible }) => {
   if (!weather) return null;
+
+  useEffect(() => {
+    if (weather.actualCity && weather.city !== weather.actualCity) {
+      toast.info(
+        `Showing weather for ${weather.actualCity} as "${weather.city}" was not found`,
+        { duration: 5000 }
+      );
+    }
+  }, [weather]);
 
   const formatTime = (timestamp: number): string => {
     return new Date(timestamp * 1000).toLocaleTimeString([], {
@@ -50,9 +59,19 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weather, isVisible }) =
               <div className="stagger-animate">
                 <h1 className="animate-slide-up text-3xl md:text-4xl font-semibold flex items-center justify-center md:justify-start">
                   {weather.city}, {weather.country}
+                  {weather.actualCity && weather.city !== weather.actualCity && (
+                    <span className="ml-2 text-amber-500" title={`Actual data from ${weather.actualCity}`}>
+                      <AlertTriangle size={20} />
+                    </span>
+                  )}
                 </h1>
                 <p className="animate-slide-up text-text-light mt-1">
                   {formatDate(weather.dt)}
+                  {weather.actualCity && weather.city !== weather.actualCity && (
+                    <span className="ml-2 text-sm text-amber-500">
+                      (Data from {weather.actualCity})
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
