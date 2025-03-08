@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 import WeatherSearch from '@/components/WeatherSearch';
 import WeatherDisplay from '@/components/WeatherDisplay';
 import CropInsights from '@/components/CropInsights';

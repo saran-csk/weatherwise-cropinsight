@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
 
