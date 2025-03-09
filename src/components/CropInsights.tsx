@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { InsightData } from '@/services/geminiService';
-import { Leaf, ThumbsDown, CheckCircle2, Tractor } from 'lucide-react';
+import { Leaf, ThumbsDown, CheckCircle2 } from 'lucide-react';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
 
@@ -28,22 +28,22 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible }) => {
         <div className="relative z-10">
           <div className="flex items-center mb-4">
             <Leaf className="text-green-600 mr-2" size={24} />
-            <h2 className="text-2xl font-semibold">Tamil Nadu Crop Analysis</h2>
+            <h2 className="text-2xl font-semibold">Crop Insights</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div className="stagger-animate">
               <div className="animate-slide-up">
-                <h3 className="text-lg font-medium flex items-center text-green-700 border-b border-green-200 pb-2">
+                <h3 className="text-lg font-medium flex items-center text-green-700">
                   <CheckCircle2 size={18} className="mr-2" />
-                  High-Value Crop Opportunities
+                  Recommended Crops
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {insights.crops.recommended && insights.crops.recommended.length > 0 ? (
+                  {insights.crops.recommended.length > 0 ? (
                     insights.crops.recommended.map((crop, index) => (
                       <span 
                         key={index} 
-                        className="bg-green-100 text-green-800 rounded-lg px-3 py-1.5 text-sm font-medium"
+                        className="bg-green-100 text-green-800 rounded-full px-3 py-1 text-sm"
                       >
                         {crop}
                       </span>
@@ -57,16 +57,16 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible }) => {
             
             <div className="stagger-animate">
               <div className="animate-slide-up">
-                <h3 className="text-lg font-medium flex items-center text-red-700 border-b border-red-200 pb-2">
+                <h3 className="text-lg font-medium flex items-center text-red-700">
                   <ThumbsDown size={18} className="mr-2" />
-                  Crops With Limited Potential
+                  Crops to Avoid
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {insights.crops.avoid && insights.crops.avoid.length > 0 ? (
+                  {insights.crops.avoid.length > 0 ? (
                     insights.crops.avoid.map((crop, index) => (
                       <span 
                         key={index} 
-                        className="bg-red-100 text-red-800 rounded-lg px-3 py-1.5 text-sm font-medium"
+                        className="bg-red-100 text-red-800 rounded-full px-3 py-1 text-sm"
                       >
                         {crop}
                       </span>
@@ -80,15 +80,10 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible }) => {
           </div>
           
           <div className="mt-6 animate-slide-up">
-            <h3 className="text-lg font-medium mb-2 flex items-center border-b border-blue-200 pb-2 text-blue-700">
-              <Tractor size={18} className="mr-2" />
-              Strategic Crop Management
-            </h3>
-            <div className="text-text-dark bg-soft-gray p-4 rounded-lg shadow-sm">
-              <p className="whitespace-pre-line leading-relaxed">
-                {insights.crops.management}
-              </p>
-            </div>
+            <h3 className="text-lg font-medium mb-2">Management Advice</h3>
+            <p className="text-text-dark bg-soft-gray p-4 rounded-lg">
+              {insights.crops.management}
+            </p>
           </div>
         </div>
       </Glass>
