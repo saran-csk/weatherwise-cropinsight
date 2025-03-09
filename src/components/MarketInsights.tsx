@@ -14,6 +14,7 @@ interface MarketPrice {
   id: string;
   crop: string;
   price: string;
+  marketPrice: string;
   lastWeekPrice: string;
   trend: 'up' | 'down' | 'stable';
   category: 'vegetable' | 'fruit' | 'grain';
@@ -32,12 +33,16 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
   if (!insights) return null;
   
   const displayPrices = localMarketPrices.length > 0 
-    ? localMarketPrices.map(item => ({
-        crop: item.crop,
-        price: `₹${item.price}/kg`,
-        trend: item.trend
-      }))
-    : insights.market.prices;
+    ? localMarketPrices
+    : insights.market.prices.map(price => ({
+        id: String(Math.random()),
+        crop: price.crop,
+        price: price.price.replace('₹', '').replace('/kg', ''),
+        marketPrice: price.price.replace('₹', '').replace('/kg', ''),
+        lastWeekPrice: '0',
+        trend: price.trend,
+        category: 'vegetable'
+      }));
   
   return (
     <AnimatedTransition 
@@ -75,16 +80,22 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                 <thead className="bg-indigo-50">
                   <tr>
                     <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Crop</th>
-                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Price</th>
+                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Category</th>
+                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Current Price</th>
+                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Market Price</th>
+                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Last Week</th>
                     <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Trend</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {displayPrices && displayPrices.length > 0 ? (
                     displayPrices.map((item, index) => (
-                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <tr key={item.id || index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                         <td className="py-2 px-4 text-sm">{item.crop}</td>
-                        <td className="py-2 px-4 text-sm font-medium">{item.price}</td>
+                        <td className="py-2 px-4 text-sm capitalize">{item.category}</td>
+                        <td className="py-2 px-4 text-sm font-medium">₹{item.price}/kg</td>
+                        <td className="py-2 px-4 text-sm font-medium">₹{item.marketPrice || item.price}/kg</td>
+                        <td className="py-2 px-4 text-sm font-medium">₹{item.lastWeekPrice}/kg</td>
                         <td className="py-2 px-4">
                           <div className="flex items-center">
                             {item.trend === 'up' ? (
@@ -109,7 +120,7 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={3} className="text-center py-4 text-gray-500">
+                      <td colSpan={6} className="text-center py-4 text-gray-500">
                         No market price data available
                       </td>
                     </tr>

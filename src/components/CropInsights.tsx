@@ -126,6 +126,50 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible, weathe
               <li>Monitor weather forecasts regularly for planning field operations</li>
             </ul>
           </div>
+
+          {weatherData && (
+            <div className="mt-6 bg-blue-50 p-4 rounded-lg animate-slide-up">
+              <h3 className="text-lg font-medium mb-2 text-blue-800 flex items-center">
+                <Thermometer size={18} className="mr-2" />
+                Temperature-Based Recommendations
+              </h3>
+              <p className="text-sm text-blue-800 mb-3">
+                Current temperature in {weatherData.city}: <span className="font-bold">{Math.round(weatherData.temperature)}°C</span>
+              </p>
+              
+              {Math.round(weatherData.temperature) < 25 ? (
+                <div className="space-y-2">
+                  <p className="text-blue-800">This cooler temperature is suitable for:</p>
+                  <ul className="list-disc pl-5 space-y-1 text-blue-800">
+                    <li>Leafy vegetables like spinach, lettuce, and cabbage</li>
+                    <li>Root vegetables like carrots, radishes, and beetroot</li>
+                    <li>Cruciferous vegetables like cauliflower and broccoli</li>
+                    <li>Peas and certain varieties of beans</li>
+                  </ul>
+                </div>
+              ) : Math.round(weatherData.temperature) < 30 ? (
+                <div className="space-y-2">
+                  <p className="text-blue-800">This moderate temperature is optimal for:</p>
+                  <ul className="list-disc pl-5 space-y-1 text-blue-800">
+                    <li>Most vegetable crops including tomatoes, peppers, and eggplants</li>
+                    <li>Many grain crops like rice, millets, and certain wheat varieties</li>
+                    <li>A wide range of fruit crops adapted to Tamil Nadu</li>
+                    <li>Most pulses and oilseed crops</li>
+                  </ul>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-blue-800">This warmer temperature is better for:</p>
+                  <ul className="list-disc pl-5 space-y-1 text-blue-800">
+                    <li>Heat-tolerant crops like okra, sweet potatoes, and amaranth</li>
+                    <li>Drought-resistant millets like pearl millet and finger millet</li>
+                    <li>Cotton and specific varieties of pulses</li>
+                    <li>Many tropical fruit trees like mango, papaya, and banana</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </Glass>
     </AnimatedTransition>

@@ -10,6 +10,7 @@ interface MarketPrice {
   id: string;
   crop: string;
   price: string;
+  marketPrice: string;
   lastWeekPrice: string;
   trend: 'up' | 'down' | 'stable';
   category: 'vegetable' | 'fruit' | 'grain';
@@ -20,6 +21,7 @@ const MarketPriceEditor: React.FC = () => {
   const [newItem, setNewItem] = useState<Omit<MarketPrice, 'id' | 'trend'>>({
     crop: '',
     price: '',
+    marketPrice: '',
     lastWeekPrice: '',
     category: 'vegetable'
   });
@@ -59,7 +61,7 @@ const MarketPriceEditor: React.FC = () => {
   };
 
   const handleAddItem = () => {
-    if (!newItem.crop || !newItem.price || !newItem.lastWeekPrice) {
+    if (!newItem.crop || !newItem.price || !newItem.lastWeekPrice || !newItem.marketPrice) {
       toast.error('Please fill all fields');
       return;
     }
@@ -79,6 +81,7 @@ const MarketPriceEditor: React.FC = () => {
     setNewItem({
       crop: '',
       price: '',
+      marketPrice: '',
       lastWeekPrice: '',
       category: 'vegetable'
     });
@@ -112,7 +115,7 @@ const MarketPriceEditor: React.FC = () => {
         <p>Add or update market prices for various crops. All prices will be displayed on the main page.</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-3 mb-4">
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">Crop Name</label>
           <Input 
@@ -135,6 +138,18 @@ const MarketPriceEditor: React.FC = () => {
               onChange={handleInputChange}
               placeholder="e.g. 50"
               className="pl-9"
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Market Price (₹/kg)</label>
+          <div className="relative">
+            <Input 
+              name="marketPrice"
+              value={newItem.marketPrice}
+              onChange={handleInputChange}
+              placeholder="e.g. 55"
             />
           </div>
         </div>
@@ -179,6 +194,7 @@ const MarketPriceEditor: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Price</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Market Price</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Week</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trend</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
@@ -190,6 +206,7 @@ const MarketPriceEditor: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">{item.crop}</td>
                   <td className="px-6 py-4 whitespace-nowrap capitalize">{item.category}</td>
                   <td className="px-6 py-4 whitespace-nowrap">₹{item.price}/kg</td>
+                  <td className="px-6 py-4 whitespace-nowrap">₹{item.marketPrice || item.price}/kg</td>
                   <td className="px-6 py-4 whitespace-nowrap">₹{item.lastWeekPrice}/kg</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
