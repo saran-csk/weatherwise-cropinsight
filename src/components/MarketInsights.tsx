@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { InsightData } from '@/services/geminiService';
-import { BarChart3, ArrowUpRight, AlertTriangle } from 'lucide-react';
+import { BarChart3, ArrowUpRight, AlertTriangle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
 
@@ -35,6 +35,64 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
             <h3 className="text-lg font-medium mb-2">Market Outlook</h3>
             <p className="text-text-dark bg-soft-gray p-4 rounded-lg">
               {insights.market.outlook}
+            </p>
+          </div>
+          
+          {/* Current Market Prices Section */}
+          <div className="mt-6 animate-slide-up">
+            <h3 className="text-lg font-medium mb-3 text-indigo-700 flex items-center">
+              <TrendingUp size={18} className="mr-2" />
+              Current Tamil Nadu Market Prices
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white rounded-lg overflow-hidden">
+                <thead className="bg-indigo-50">
+                  <tr>
+                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Crop</th>
+                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Price</th>
+                    <th className="py-2 px-4 text-left text-sm font-medium text-indigo-800">Trend</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {insights.market.prices && insights.market.prices.length > 0 ? (
+                    insights.market.prices.map((item, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="py-2 px-4 text-sm">{item.crop}</td>
+                        <td className="py-2 px-4 text-sm font-medium">{item.price}</td>
+                        <td className="py-2 px-4">
+                          <div className="flex items-center">
+                            {item.trend === 'up' ? (
+                              <>
+                                <TrendingUp size={16} className="text-green-600 mr-1" />
+                                <span className="text-sm text-green-600">Rising</span>
+                              </>
+                            ) : item.trend === 'down' ? (
+                              <>
+                                <TrendingDown size={16} className="text-red-600 mr-1" />
+                                <span className="text-sm text-red-600">Falling</span>
+                              </>
+                            ) : (
+                              <>
+                                <Minus size={16} className="text-gray-600 mr-1" />
+                                <span className="text-sm text-gray-600">Stable</span>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3} className="text-center py-4 text-gray-500">
+                        No market price data available
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-gray-500 mt-2 italic">
+              * Prices are approximate and may vary based on quality and location within Tamil Nadu
             </p>
           </div>
           

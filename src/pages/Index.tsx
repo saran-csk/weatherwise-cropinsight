@@ -159,7 +159,8 @@ const Index = () => {
           <>
             <CropInsights 
               insights={insightData} 
-              isVisible={isInsightsVisible} 
+              isVisible={isInsightsVisible}
+              weatherData={weatherData}
             />
             
             <MarketInsights 

@@ -1,16 +1,18 @@
 
 import React from 'react';
 import { InsightData } from '@/services/geminiService';
-import { Leaf, ThumbsDown, CheckCircle2 } from 'lucide-react';
+import { Leaf, ThumbsDown, CheckCircle2, Thermometer } from 'lucide-react';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
+import { WeatherData } from '@/services/weatherService';
 
 interface CropInsightsProps {
   insights: InsightData;
   isVisible: boolean;
+  weatherData?: WeatherData;
 }
 
-const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible }) => {
+const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible, weatherData }) => {
   if (!insights) return null;
   
   return (
@@ -29,6 +31,19 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible }) => {
           <div className="flex items-center mb-4">
             <Leaf className="text-green-600 mr-2" size={24} />
             <h2 className="text-2xl font-semibold">Crop Insights</h2>
+            {weatherData && (
+              <div className="ml-auto flex items-center text-gray-600">
+                <Thermometer size={18} className="mr-1" />
+                <span className="text-sm">{Math.round(weatherData.temperature)}°C</span>
+              </div>
+            )}
+          </div>
+          
+          <div className="mt-2 mb-4 bg-blue-50 p-3 rounded-lg text-sm text-blue-800">
+            <p className="font-medium">
+              These recommendations are specifically tailored for Tamil Nadu's agricultural conditions at the current temperature
+              {weatherData ? ` of ${Math.round(weatherData.temperature)}°C in ${weatherData.city}` : ''}.
+            </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
