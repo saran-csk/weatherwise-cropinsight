@@ -1,17 +1,46 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { InsightData } from '@/services/geminiService';
-import { BarChart3, ArrowUpRight, AlertTriangle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { BarChart3, ArrowUpRight, AlertTriangle, TrendingUp, TrendingDown, Minus, ShieldCheck } from 'lucide-react';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface MarketInsightsProps {
   insights: InsightData;
   isVisible: boolean;
 }
 
+interface MarketPrice {
+  id: string;
+  crop: string;
+  price: string;
+  lastWeekPrice: string;
+  trend: 'up' | 'down' | 'stable';
+  category: 'vegetable' | 'fruit' | 'grain';
+}
+
 const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) => {
+  const [localMarketPrices, setLocalMarketPrices] = useState<MarketPrice[]>([]);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const savedPrices = localStorage.getItem('marketPrices');
+    if (savedPrices) {
+      setLocalMarketPrices(JSON.parse(savedPrices));
+    }
+  }, []);
+  
   if (!insights) return null;
+  
+  const displayPrices = localMarketPrices.length > 0 
+    ? localMarketPrices.map(item => ({
+        crop: item.crop,
+        price: `₹${item.price}/kg`,
+        trend: item.trend
+      }))
+    : insights.market.prices;
   
   return (
     <AnimatedTransition 
@@ -21,6 +50,18 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
       delay={300}
     >
       <Glass className="p-6 md:p-8 relative overflow-hidden">
+        <div className="absolute top-2 right-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/admin')}
+            className="flex items-center gap-1 text-sm"
+          >
+            <ShieldCheck size={16} className="text-indigo-600" />
+            <span className="text-indigo-600">Admin</span>
+          </Button>
+        </div>
+        
         <div className="absolute top-0 right-0 w-40 h-40 opacity-5 pointer-events-none">
           <BarChart3 className="w-full h-full" />
         </div>
@@ -54,8 +95,8 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {insights.market.prices && insights.market.prices.length > 0 ? (
-                    insights.market.prices.map((item, index) => (
+                  {displayPrices && displayPrices.length > 0 ? (
+                    displayPrices.map((item, index) => (
                       <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                         <td className="py-2 px-4 text-sm">{item.crop}</td>
                         <td className="py-2 px-4 text-sm font-medium">{item.price}</td>
@@ -91,9 +132,16 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                 </tbody>
               </table>
             </div>
-            <p className="text-xs text-gray-500 mt-2 italic">
-              * Prices are approximate and may vary based on quality and location within Tamil Nadu
-            </p>
+            {localMarketPrices.length > 0 && (
+              <p className="text-xs text-gray-500 mt-2 italic">
+                * Prices updated by admin
+              </p>
+            )}
+            {localMarketPrices.length === 0 && (
+              <p className="text-xs text-gray-500 mt-2 italic">
+                * Prices are approximate and may vary based on quality and location within Tamil Nadu
+              </p>
+            )}
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
