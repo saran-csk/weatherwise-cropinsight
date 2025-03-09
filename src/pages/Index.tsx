@@ -1,11 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import WeatherSearch from '@/components/WeatherSearch';
 import WeatherDisplay from '@/components/WeatherDisplay';
 import CropInsights from '@/components/CropInsights';
 import MarketInsights from '@/components/MarketInsights';
 import ChatAssistant from '@/components/ChatAssistant';
 import AnimatedTransition from '@/components/AnimatedTransition';
+import { Button } from '@/components/ui/button';
 import { 
   fetchWeatherData, 
   fetchWeatherByCoords,
@@ -18,7 +21,7 @@ import {
   InsightData,
   InsightError 
 } from '@/services/geminiService';
-import { Leaf, Cloud } from 'lucide-react';
+import { Leaf, Cloud, ShieldCheck } from 'lucide-react';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +30,7 @@ const Index = () => {
   const [isWeatherVisible, setIsWeatherVisible] = useState(false);
   const [isInsightsVisible, setIsInsightsVisible] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isFirstLoad) {
@@ -127,6 +131,18 @@ const Index = () => {
       </div>
       
       <header className="pt-12 md:pt-16 pb-8 px-4 text-center relative z-10">
+        <div className="absolute top-4 right-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate('/admin')}
+            className="flex items-center gap-1 text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+          >
+            <ShieldCheck size={16} />
+            <span>Admin Login</span>
+          </Button>
+        </div>
+        
         <AnimatedTransition show={true} animation="slide-down">
           <div className="flex items-center justify-center mb-2">
             <Cloud className="text-weather-dark-blue mr-2" size={28} />

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { InsightData } from '@/services/geminiService';
-import { Leaf, ThumbsDown, CheckCircle2, Thermometer } from 'lucide-react';
+import { Leaf, ThumbsDown, CheckCircle2, Thermometer, AlertCircle, Info } from 'lucide-react';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
 import { WeatherData } from '@/services/weatherService';
@@ -67,6 +67,12 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible, weathe
                     <p className="text-text-light text-sm">No specific crop recommendations available.</p>
                   )}
                 </div>
+                <div className="mt-3 bg-green-50 p-3 rounded-lg">
+                  <p className="text-sm text-green-800">
+                    <Info size={14} className="inline mr-1" />
+                    These crops are ideal for Tamil Nadu's current climate conditions. They're expected to have good yield and market demand.
+                  </p>
+                </div>
               </div>
             </div>
             
@@ -90,6 +96,12 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible, weathe
                     <p className="text-text-light text-sm">No specific crops to avoid mentioned.</p>
                   )}
                 </div>
+                <div className="mt-3 bg-red-50 p-3 rounded-lg">
+                  <p className="text-sm text-red-800">
+                    <AlertCircle size={14} className="inline mr-1" />
+                    These crops may face challenges in the current climate conditions in Tamil Nadu, leading to poor yield or increased susceptibility to diseases.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -99,6 +111,20 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible, weathe
             <p className="text-text-dark bg-soft-gray p-4 rounded-lg">
               {insights.crops.management}
             </p>
+          </div>
+
+          <div className="mt-6 bg-amber-50 p-4 rounded-lg animate-slide-up">
+            <h3 className="text-lg font-medium mb-2 text-amber-800 flex items-center">
+              <AlertCircle size={18} className="mr-2" />
+              Tamil Nadu Agriculture Tips
+            </h3>
+            <ul className="list-disc pl-5 space-y-2 text-amber-800">
+              <li>Use drought-resistant varieties when planting during summer months</li>
+              <li>Consider integrated pest management to reduce chemical usage</li>
+              <li>Implement drip irrigation systems to conserve water</li>
+              <li>Follow Tamil Nadu Agricultural University recommendations for specific crop varieties</li>
+              <li>Monitor weather forecasts regularly for planning field operations</li>
+            </ul>
           </div>
         </div>
       </Glass>

@@ -1,11 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { InsightData } from '@/services/geminiService';
-import { BarChart3, ArrowUpRight, AlertTriangle, TrendingUp, TrendingDown, Minus, ShieldCheck } from 'lucide-react';
+import { BarChart3, ArrowUpRight, AlertTriangle, TrendingUp, TrendingDown, Minus, Info } from 'lucide-react';
 import Glass from './Glass';
 import AnimatedTransition from './AnimatedTransition';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
 
 interface MarketInsightsProps {
   insights: InsightData;
@@ -23,7 +21,6 @@ interface MarketPrice {
 
 const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) => {
   const [localMarketPrices, setLocalMarketPrices] = useState<MarketPrice[]>([]);
-  const navigate = useNavigate();
   
   useEffect(() => {
     const savedPrices = localStorage.getItem('marketPrices');
@@ -50,18 +47,6 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
       delay={300}
     >
       <Glass className="p-6 md:p-8 relative overflow-hidden">
-        <div className="absolute top-2 right-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/admin')}
-            className="flex items-center gap-1 text-sm"
-          >
-            <ShieldCheck size={16} className="text-indigo-600" />
-            <span className="text-indigo-600">Admin</span>
-          </Button>
-        </div>
-        
         <div className="absolute top-0 right-0 w-40 h-40 opacity-5 pointer-events-none">
           <BarChart3 className="w-full h-full" />
         </div>
@@ -132,6 +117,12 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                 </tbody>
               </table>
             </div>
+            <div className="mt-2 bg-indigo-50 p-3 rounded-lg">
+              <p className="text-sm text-indigo-800">
+                <Info size={14} className="inline mr-1" />
+                Tamil Nadu Agricultural Marketing Board updates these prices daily from major markets across the state. Prices may vary by location and quality.
+              </p>
+            </div>
             {localMarketPrices.length > 0 && (
               <p className="text-xs text-gray-500 mt-2 italic">
                 * Prices updated by admin
@@ -165,6 +156,12 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                     <p className="text-text-light text-sm">No specific market recommendations available.</p>
                   )}
                 </ul>
+                <div className="mt-3 bg-blue-50 p-3 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <Info size={14} className="inline mr-1" />
+                    These recommendations are based on current market trends and weather conditions in Tamil Nadu.
+                  </p>
+                </div>
               </div>
             </div>
             
@@ -188,6 +185,12 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                     <p className="text-text-light text-sm">No specific risks mentioned.</p>
                   )}
                 </ul>
+                <div className="mt-3 bg-amber-50 p-3 rounded-lg">
+                  <p className="text-sm text-amber-800">
+                    <AlertTriangle size={14} className="inline mr-1" />
+                    Monitoring these risks can help farmers make informed decisions and minimize potential losses.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
