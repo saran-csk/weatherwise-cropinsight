@@ -39,7 +39,7 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible }) => {
                   High-Value Crop Opportunities
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {insights.crops.recommended.length > 0 ? (
+                  {insights.crops.recommended && insights.crops.recommended.length > 0 ? (
                     insights.crops.recommended.map((crop, index) => (
                       <span 
                         key={index} 
@@ -62,7 +62,7 @@ const CropInsights: React.FC<CropInsightsProps> = ({ insights, isVisible }) => {
                   Crops With Limited Potential
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {insights.crops.avoid.length > 0 ? (
+                  {insights.crops.avoid && insights.crops.avoid.length > 0 ? (
                     insights.crops.avoid.map((crop, index) => (
                       <span 
                         key={index} 

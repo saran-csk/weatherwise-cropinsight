@@ -51,7 +51,7 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                   Strategic Recommendations
                 </h3>
                 <ul className="mt-3 space-y-2">
-                  {insights.market.recommendations.length > 0 ? (
+                  {insights.market.recommendations && insights.market.recommendations.length > 0 ? (
                     insights.market.recommendations.map((rec, index) => (
                       <li 
                         key={index} 
@@ -74,7 +74,7 @@ const MarketInsights: React.FC<MarketInsightsProps> = ({ insights, isVisible }) 
                   Risk Assessment & Mitigation
                 </h3>
                 <ul className="mt-3 space-y-2">
-                  {insights.market.risks.length > 0 ? (
+                  {insights.market.risks && insights.market.risks.length > 0 ? (
                     insights.market.risks.map((risk, index) => (
                       <li 
                         key={index} 
